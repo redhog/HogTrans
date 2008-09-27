@@ -1,0 +1,1 @@
+dsn = "user=redhog password=saltgurka dbname=fosstrans"

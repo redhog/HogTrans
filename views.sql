@@ -1,11 +1,12 @@
-drop view word_synonyms;
-drop view word_translations2;
-drop view word_translations;
-drop view word_translation_count_total;
-drop view word_translation_count;
-drop view translation_words_str;
-drop view translation_words;
-drop view translation_pairs;
+drop view word_synonyms cascade;
+drop view word_translations2 cascade;
+drop view word_translations cascade;
+drop view word_translation_count_total cascade;
+drop view word_translation_total cascade;
+drop view word_translation_count cascade;
+drop view translation_words_str cascade;
+drop view translation_words cascade;
+drop view translation_pairs cascade;
 
 create view translation_pairs as
  select
@@ -68,7 +69,7 @@ create view word_translation_count as
   trans.src_language_name,
   trans.dst_language_symbol,
   trans.dst_language_name,
-  count(trans.src_word) as "count"
+  cast(count(trans.src_word) as float) as "count"
  from
   translation_words_str as trans
  group by
@@ -84,32 +85,20 @@ create view word_translation_count as
   trans.dst_language_name
  order by trans.src_language asc, dst_language asc, "count" desc;
 
-create view word_translation_count_total as
+create view word_translation_total as
  select
-  trans_count.src_word,
-  trans_count.src_word_str,
-  trans_count.dst_word,
-  trans_count.dst_word_str,
-  trans_count.src_language,
-  trans_count.dst_language,
-  trans_count.src_language_symbol,
-  trans_count.src_language_name,
-  trans_count.dst_language_symbol,
-  trans_count.dst_language_name,
-  cast(trans_count.count as float) as "count",
-  cast((select
-	 sum(trans_sum2.count)
-	from
-	 word_translation_count as trans_sum2
-	where
-	     trans_count.src_word = trans_sum2.src_word
-	 and trans_count.src_language = trans_sum2.src_language
-	 and trans_count.dst_language = trans_sum2.dst_language)
-       as float) as total
+  trans.src_word,
+  trans.src_language,
+  trans.dst_language,
+  cast(count(trans.src_word) as float) as "total"
  from
-  word_translation_count as trans_count;
+  translation_words as trans
+ group by
+  trans.src_word,
+  trans.src_language,
+  trans.dst_language;
 
-create view word_translations as
+create view word_translation_count_total as
  select
   trans.src_word,
   trans.src_word_str,
@@ -122,7 +111,19 @@ create view word_translations as
   trans.dst_language_symbol,
   trans.dst_language_name,
   trans.count,
-  trans.total,
+  (select
+    total.total
+   from word_translation_total as total
+   where
+        trans.src_word = total.src_word
+    and trans.src_language = total.src_language
+    and trans.dst_language = total.dst_language) as total
+ from
+  word_translation_count as trans;
+
+create view word_translations as
+ select
+  trans.*,
   trans.count / trans.total as weight
  from
   word_translation_count_total as trans;
@@ -145,6 +146,9 @@ create view word_translations2 as
   word_translations as trans1
  where
   trans1.weight > 1;
+
+
+
  
 create view word_synonyms as
  select

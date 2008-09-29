@@ -138,8 +138,8 @@ create view word_translations2 as
       where
            trans1.src_word = trans2.dst_word
        and trans1.dst_word = trans2.src_word
-       and trans1.src_language_symbol = trans2.dst_language_symbol
-       and trans1.dst_language_symbol = trans2.src_language_symbol
+       and trans1.src_language = trans2.dst_language
+       and trans1.dst_language = trans2.src_language
        and trans2.weight > 1)) as value,
   trans1.*
  from

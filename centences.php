@@ -9,6 +9,7 @@
    $dbconn = pg_connect("host=localhost dbname=fosstrans user=redhog password=saltgurka")
 	      or die('Could not connect: ' . pg_last_error());
    $src_word = pg_escape_string($_REQUEST["src_word"]);
+   $dst_word = pg_escape_string($_REQUEST["dst_word"]);
    $src_lang = pg_escape_string($_REQUEST["src_lang"]);
    $dst_lang = pg_escape_string($_REQUEST["dst_lang"]);
   ?>
@@ -16,6 +17,7 @@
   <form>
    <h1>FOSSTrans</h1>
    <div>Source word: <input type="text" name="src_word" value="<?=$_REQUEST["src_word"];?>" /></div>
+   <div>Destination word: <input type="text" name="dst_word" value="<?=$_REQUEST["dst_word"];?>" /></div>
    <div>Source language:
     <select name="src_lang">
      <?php
@@ -50,51 +52,49 @@
 
   <?php
 
-   if ($src_word != '' and $src_lang != '' && dst_lang != '') {
+   if ($src_word != '' && $dst_word != '' && $src_lang != '' && dst_lang != '') {
        $query = "select id from words where string = '{$src_word}'";
        $result = pg_query($query) or die('Query failed: ' . pg_last_error());
        $row = pg_fetch_assoc($result);
        pg_free_result($result);
        $src_word_id = $row['id'];
 
-       if ($src_word_id == '') {
-           echo "The word you searched for was not found in the database.";
+       $query = "select id from words where string = '{$dst_word}'";
+       $result = pg_query($query) or die('Query failed: ' . pg_last_error());
+       $row = pg_fetch_assoc($result);
+       pg_free_result($result);
+       $dst_word_id = $row['id'];
+
+       if ($src_word_id == '' or $dst_word_id == '') {
+           echo "The word(s) you searched for was not found in the database.";
        } else {
 	   $query = "select\n" .
-		    " words.string as word, value, weight, reverse_weight, count, reverse_count, total, reverse_total\n" .
+		    " src_msgstr_str, dst_msgstr_str\n" .
 		    "from\n" .
-		    " word_translation_value,\n" .
-		    " words\n" .
+		    " translation_strs\n" .
 		    "where\n" .
 		    "     src_word = '{$src_word_id}'\n" .
+		    " and dst_word = '{$dst_word_id}'\n" .
 		    " and src_language = '{$src_lang}'\n" .
-		    " and dst_language = '{$dst_lang}'\n" .
-		    " and dst_word = words.id\n" .
-		    "order by value desc\n" .
-		    "limit 20";
+		    " and dst_language = '{$dst_lang}'";
 
 	    $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
 	    echo "<table border=1>\n";
 	    echo "<tr>\n";
-                echo "<td></td>";
 		for($gt = 0; $gt < pg_num_fields($result); $gt++) {
 		    echo "<th>" . pg_field_name($result, $gt) . "</th>";
 		}
 	    echo "</tr>\n";
 
 	    for($lt = 0; $lt < pg_num_rows($result); $lt++) {
-		$dst_word = pg_result($result, $lt, 0);
-
 		echo "<tr>\n";
-                echo "<td>\n";
-                echo "<a href='?src_word={$dst_word}&src_lang={$_REQUEST["dst_lang"]}&dst_lang={$_REQUEST["src_lang"]}'>reverse</a> ";
-                echo "<a href='centences.php?src_word={$src_word}&dst_word={$dst_word}&src_lang={$_REQUEST["src_lang"]}&dst_lang={$_REQUEST["dst_lang"]}'>examples</a> ";
-                echo "</td>\n";
-
+		$dst_word = pg_result($result, $lt, 0);
 		for($gt = 0; $gt < pg_num_fields($result); $gt++) {
 		    echo "<td>";
+		    echo "<a href='?src_word={$dst_word}&src_lang={$_REQUEST["dst_lang"]}&dst_lang={$_REQUEST["src_lang"]}'>";
 		    echo pg_result($result, $lt, $gt);
+		    echo "</a>";
 		    echo "</td>\n";
 		}
 		echo "</tr>\n";

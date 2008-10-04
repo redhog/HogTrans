@@ -5,6 +5,7 @@ drop view word_translation_weight cascade;
 drop view word_translation_count_total cascade;
 drop view word_translation_total cascade;
 drop view word_translation_count cascade;
+drop view translation_strs cascade;
 drop view translation_words cascade;
 drop view translation_pairs cascade;
 
@@ -36,6 +37,18 @@ create view translation_words as
    src_words.msgstr = trans.src_msgstr
   join msgstr_words as dst_words on
    trans.dst_msgstr = dst_words.msgstr;
+
+create view translation_strs as
+ select
+  trans.*,
+  src.string as src_msgstr_str,
+  dst.string as dst_msgstr_str
+ from
+  translation_words as  trans
+  join msgstrs as src on
+   trans.src_msgstr = src.id
+  join msgstrs as dst on
+   trans.dst_msgstr = dst.id;
 
 create view word_translation_count as
  select
@@ -91,7 +104,9 @@ create view word_translation_weight as
 create view word_translation_reverse_weight as
  select
   trans1.*,
-  trans2.weight as reverse_weight
+  trans2.weight as reverse_weight,
+  trans2.count as reverse_count,
+  trans2.total as reverse_total
  from
   word_translation_weight as trans1
   join word_translation_weight as trans2 on

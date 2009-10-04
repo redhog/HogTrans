@@ -65,7 +65,7 @@ if sys.argv[1] == "mofile":
     package_version = sys.argv[3]
     mofile_path = sys.argv[4]
 
-    word_re = re.compile(r"\W+")
+    word_re = re.compile(r"[][ !\"#$%&'()*+,-./0123456789:;<=>?@\\^_`{|}~]") #re.compile(r"\W+")
 
     package_id = insert_package(package_name, package_version)
     args = {"package": package_id, "path": mofile_path}

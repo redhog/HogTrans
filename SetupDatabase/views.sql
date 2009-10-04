@@ -8,6 +8,45 @@ drop view word_translation_count cascade;
 drop view translation_strs cascade;
 drop view translation_words cascade;
 drop view translation_pairs cascade;
+drop view language_msgstrs cascade;
+drop view language_words_strs cascade;
+drop view language_words cascade;
+
+create view language_words as
+ select distinct
+  translations.language,
+  msgstr_words.word
+ from
+  msgstr_words
+  join translations on
+   msgstr_words.msgstr = translations.msgstr;
+
+create view language_words_strs as
+ select
+  language_words.*,
+  words.string
+ from
+  language_words
+  join words on
+   language_words.word = words.id;
+
+create view language_msgstrs as
+ select
+  msgstrs.*,
+  translations.language
+ from
+  msgstrs
+  join translations on
+   msgstrs.id = translations.msgstr;
+
+create view language_msgstrs_word as
+ select
+  language_msgstrs.*,
+  msgstr_words.word
+ from
+  language_msgstrs
+  join msgstr_words on
+   msgstr_words.msgstr = language_msgstrs.id;
 
 create view translation_pairs as
  select

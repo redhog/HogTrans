@@ -1,21 +1,15 @@
-<html>
- <head>
-  <title>FOSSTrans</title>
-  <link type="text/css" rel="stylesheet" href="fosstrans.css" />
- </head>
- <body>
-
-  <?php
-   $dbconn = pg_connect("host=localhost dbname=fosstrans user=redhog password=saltgurka")
-	      or die('Could not connect: ' . pg_last_error());
-   $src_word = pg_escape_string($_REQUEST["src_word"]);
-   $src_lang = pg_escape_string($_REQUEST["src_lang"]);
-   $dst_lang = pg_escape_string($_REQUEST["dst_lang"]);
-  ?>
+<?php
+ include('head.php');
+ $src_word = pg_escape_string($_REQUEST["src_word"]);
+ $src_lang = pg_escape_string($_REQUEST["src_lang"]);
+ $dst_lang = pg_escape_string($_REQUEST["dst_lang"]);
+?>
 
   <form>
-   <h1>FOSSTrans</h1>
-   <div>Source word: <input type="text" name="src_word" value="<?=$_REQUEST["src_word"];?>" /></div>
+   <div>
+    Source word: <input type="text" name="src_word" value="<?=$_REQUEST["src_word"];?>" />
+    <a href="<?php echo "words.php?word={$src_word}&lang={$src_lang}"; ?>">...</a>
+   </div>
    <div>Source language:
     <select name="src_lang">
      <?php
@@ -30,6 +24,7 @@
       }
      ?>
     </select>
+   </div>
    <div>Destination language:
     <select name="dst_lang">
      <?php
@@ -50,7 +45,7 @@
 
   <?php
 
-   if ($src_word != '' and $src_lang != '' && dst_lang != '') {
+   if ($src_word != '' && $src_lang != '' && $dst_lang != '') {
        $query = "select id from words where string = '{$src_word}'";
        $result = pg_query($query) or die('Query failed: ' . pg_last_error());
        $row = pg_fetch_assoc($result);
@@ -88,7 +83,7 @@
 
 		echo "<tr>\n";
                 echo "<td>\n";
-                echo "<a href='?src_word={$dst_word}&src_lang={$_REQUEST["dst_lang"]}&dst_lang={$_REQUEST["src_lang"]}'>reverse</a> ";
+                echo "<a href='index.php?src_word={$dst_word}&src_lang={$_REQUEST["dst_lang"]}&dst_lang={$_REQUEST["src_lang"]}'>reverse</a> ";
                 echo "<a href='centences.php?src_word={$src_word}&dst_word={$dst_word}&src_lang={$_REQUEST["src_lang"]}&dst_lang={$_REQUEST["dst_lang"]}'>examples</a> ";
                 echo "</td>\n";
 
@@ -107,10 +102,6 @@
    }
   ?>
 
-
-  <?php
-   pg_close($dbconn);
-  ?>
-
- </body>
-</html>
+<?php
+ include('foot.php');
+?>

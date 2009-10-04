@@ -20,7 +20,7 @@ load_files () {
   cd "$(basename "$1" .deb)"
   find . -name "*.mo" |
    while read mofile_path; do
-    echo $scriptroot/load.py mofile "$package_name" "$package_version" "$mofile_path"
+    $scriptroot/load.py mofile "$package_name" "$package_version" "$mofile_path"
    done;
  )
  rm -rf "$(basename "$1")" "$(basename "$1" .deb)"

@@ -66,7 +66,7 @@
            echo "The word(s) you searched for was not found in the database.";
        } else {
 	   $query = "select distinct\n" .
-		    " src_msgstr_str, dst_msgstr_str\n" .
+		    " src, dst, src_msgstr_str, dst_msgstr_str\n" .
 		    "from\n" .
 		    " translation_strs\n" .
 		    "where\n" .
@@ -78,17 +78,26 @@
 	    $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
 	    echo "<table border=1>\n";
+	    echo "<th></th>";
 	    echo "<th>Source language</th>";
 	    echo "<th>Destination language</th>";
 	    echo "</tr>\n";
 
 	    for($lt = 0; $lt < pg_num_rows($result); $lt++) {
+                $src=pg_result($result, $lt, 0);
+                $dst=pg_result($result, $lt, 1);
+                $src_msgstr=pg_result($result, $lt, 2);
+                $dst_msgstr=pg_result($result, $lt, 3);
+
 		echo "<tr>\n";
 		echo "<td>";
-		echo wordlink(pg_result($result, $lt, 0), $src_lang, $dst_lang);
+		echo "<a href='centence.php?translation={$src}&src_lang={$src_lang}&dst_lang={$dst_lang}'>src</a> <a href='centence.php?translation={$dst}&src_lang={$dst_lang}&dst_lang={$src_lang}'>dst</a>";
+		echo "</td>\n";
+		echo "<td>";
+		echo wordlink($src_msgstr, $src_lang, $dst_lang);
 		echo "</td>";
 		echo "<td>";
-		echo wordlink(pg_result($result, $lt, 1), $dst_lang, $src_lang);
+		echo wordlink($dst_msgstr, $dst_lang, $src_lang);
 		echo "</td>\n";
 		echo "</tr>\n";
 	    }
@@ -118,12 +127,17 @@
 	    $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
 	    echo "<table border=1>\n";
-	    echo "<tr><th>String</th></tr>\n";
+	    echo "<tr><th></th><th>String</th></tr>\n";
 
 	    for($lt = 0; $lt < pg_num_rows($result); $lt++) {
+                $src = pg_result($result, $lt, 0);
+                $string = pg_result($result, $lt, 1);
 		echo "<tr>\n";
+		echo "<td>";
+		echo "<a href='centence.php?translation={$src}&src_lang={$src_lang}&dst_lang={$dst_lang}'>src</a>";
+		echo "</td>\n";
   	        echo "<td>";
-		echo wordlink(pg_result($result, $lt, 1), $src_lang, $dst_lang);
+		echo wordlink($string, $src_lang, $dst_lang);
 		echo "</td>\n";
 		echo "</tr>\n";
 	    }

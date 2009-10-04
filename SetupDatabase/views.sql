@@ -8,9 +8,31 @@ drop view word_translation_count cascade;
 drop view translation_strs cascade;
 drop view translation_words cascade;
 drop view translation_pairs cascade;
+drop view language_msgstrs_word cascade;
 drop view language_msgstrs cascade;
 drop view language_words_strs cascade;
 drop view language_words cascade;
+drop view mofile_metadatas_info cascade;
+drop view mofiles_info cascade;
+
+create view mofiles_info as
+ select
+  mofiles.*,
+  packages.name,
+  packages.version
+ from
+  mofiles
+  join packages on
+   mofiles.package = packages.id;
+
+create view mofile_metadatas_info as
+ select
+  mofile_metadatas.*,
+  metadatas.name
+ from
+  mofile_metadatas
+  join metadatas on
+   mofile_metadatas.metadata = metadatas.id;
 
 create view language_words as
  select distinct
@@ -32,8 +54,8 @@ create view language_words_strs as
 
 create view language_msgstrs as
  select
-  msgstrs.*,
-  translations.language
+  translations.*,
+  msgstrs.string
  from
   msgstrs
   join translations on

@@ -1,0 +1,10 @@
+Revision: FOSSTrans--main--0.1--patch-1
+Archive: redhog@thalari.redhog.org
+Creator: Egil Moeller <redhog@thalari.redhog.org>
+Date: Sun Sep 28 23:34:39 CEST 2008
+Standard-date: 2008-09-28 21:34:39 GMT
+Modified-files: views.sql
+New-patches: redhog@thalari.redhog.org/FOSSTrans--main--0.1--patch-1
+Summary: Some minimal optimization and some cleanup
+Keywords: 
+

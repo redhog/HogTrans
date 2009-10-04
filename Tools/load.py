@@ -1,8 +1,8 @@
 #! /usr/bin/python
 
-import config, polib, psycopg2, sys, os.path, re
+import FOSSTrans.Config, FOSSTrans.Utils.polib, psycopg2, sys, os.path, re
 
-conn = psycopg2.connect(config.dsn)
+conn = psycopg2.connect(FOSSTrans.Config.dsn)
 cur = conn.cursor()
 
 def insert_anything(table, **args):
@@ -85,7 +85,7 @@ if sys.argv[1] == "mofile":
         assert lc_part.startswith("LC_")
         language_id = insert_language(language)
         
-        mofile = polib.mofile(mofile_path)
+        mofile = FOSSTrans.Utils.polib.mofile(mofile_path)
         charset = mofile.charset()
 
         for key, value in mofile.metadata.iteritems():

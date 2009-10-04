@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!--
+ Webwidgets web developement framework example file
+ Copyright (C) 2006 uAnywhere, Egil Moeller <redhog@redhog.org>
+ Copyright (C) 2007 FreeCode AS, Egil Moeller <egil.moller@freecode.no>
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+USA
+-->
+<w:wwml
+ xmlns="http://www.w3.org/TR/REC-html40"
+ xmlns:w="http://freecode.no/xml/namespaces/wwml-1.0"
+ xmlns:html="http://www.w3.org/TR/REC-html40"
+ >
+ <w:HtmlWindow
+  using="Webwidgets"
+  bind="FOSSTrans.UICallbacks.MainWindow"
+
+  id="MainWindow"
+  title="FOSSTRans">
+
+  <w:Html id="Body">
+   <w:TabbedView id="SearchModes" page=":path:SearchWords">
+    <w:Html id="SearchWords" title="Search for words">
+     <w:Media id="Logo" content="HogTrans.png" />
+     <w:VerticalFieldgroup id="Search">
+      <w:Field id="SrcWord" Label=":Html:Word to translate">
+       <w:StringInput id="Field" />
+      </w:Field>
+      <w:Field id="SrcLanguage" Label=":Html:Translate from">
+       <w:RowsSingleValueListInput id="Field" />
+      </w:Field>
+      <w:Field id="DstLanguage" Label=":Html:Translate to">
+       <w:RowsSingleValueListInput id="Field" />
+      </w:Field>
+     </w:VerticalFieldgroup>
+     <w:Div id="Actions">
+      <w:Button id="Search" title="Let the hog translate" />
+      <w:Button id="Lucky" title="I'm feeling lucky" />
+     </w:Div>
+
+     <w:Field id="Result" Label=":Html:Translations">
+      <w:Table id="Field" rows_per_page=":integer:10">
+       <w:odict id="columns">
+	<w:string id="function_col"></w:string>
+	<w:string id="dst_word"      >Translation</w:string>
+	<w:string id="value"         >Value</w:string>
+	<w:string id="weight"        >Weight</w:string>
+	<w:string id="reverse_weight">Reverse weight</w:string>
+	<w:string id="count"         >Count</w:string>
+	<w:string id="total"         >Total</w:string>
+	<w:string id="reverse_total" >Reverse total</w:string>
+       </w:odict>
+       <w:list id="sort">
+        <w:list id="col1"><w:string id="colname">value</w:string><w:string id="colsrt">desc</w:string></w:list>
+        <w:list id="col2"><w:string id="colname">weight</w:string><w:string id="colsrt">desc</w:string></w:list>
+        <w:list id="col3"><w:string id="colname">reverse_weight</w:string><w:string id="colsrt">desc</w:string></w:list>
+        <w:list id="col4"><w:string id="colname">total</w:string><w:string id="colsrt">desc</w:string></w:list>
+        <w:list id="col5"><w:string id="colname">reverse_total</w:string><w:string id="colsrt">desc</w:string></w:list>
+        <w:list id="col5"><w:string id="colname">count</w:string><w:string id="colsrt">desc</w:string></w:list>
+        <w:list id="col6"><w:string id="colname">dst_word</w:string><w:string id="colsrt">desc</w:string></w:list>
+       </w:list>
+       <w:odict id="functions">
+	<w:odict id="function_col">
+	 <w:string id="reverse">Reverse</w:string>
+	 <w:string id="examples">Examples</w:string>
+	</w:odict>
+       </w:odict>
+      </w:Table>
+     </w:Field>
+    </w:Html>
+
+    <w:Html id="SearchMessages" title="Search for centences">
+     <w:Media id="Logo" content="HogTrans.png" />
+     <w:VerticalFieldgroup id="Search">
+      <w:Field id="SrcWord" Label=":Html:Find translations from">
+       <w:StringInput id="Field" bind="dont-require" />
+      </w:Field>
+      <w:Field id="DstWord" Label=":Html:Find translations to">
+       <w:StringInput id="Field" bind="dont-require" />
+      </w:Field>
+      <w:Field id="SrcLanguage" Label=":Html:Translate from">
+       <w:RowsSingleValueListInput id="Field" bind="dont-require" />
+      </w:Field>
+      <w:Field id="DstLanguage" Label=":Html:Translate to">
+       <w:RowsSingleValueListInput id="Field" bind="dont-require" />
+      </w:Field>
+      <w:Field id="Search" Label=":Html:">
+       <w:Html id="Field">
+	<w:Button id="Search" title="Let the hog translate" bind="dont-require" />
+	<w:Button id="Lucky" title="I'm feeling lucky" bind="dont-require" />
+       </w:Html>
+      </w:Field>
+     </w:VerticalFieldgroup>
+
+     <w:Field id="Result" Label=":Html:Translations">
+      <w:Table id="Field" rows_per_page=":integer:10" bind="dont-require">
+       <w:odict id="columns">
+	<w:string id="function_col"></w:string>
+	<w:string id="src">From</w:string>
+	<w:string id="dst">To</w:string>
+       </w:odict>
+       <w:odict id="functions">
+	<w:odict id="function_col">
+	</w:odict>
+       </w:odict>
+      </w:Table>
+     </w:Field>
+    </w:Html>
+
+    <w:Html id="Statistics" title="Statistics">
+     <w:Media id="Logo" content="HogTrans.png" />
+
+    </w:Html>
+
+    <w:Html id="About" title="About">
+     <w:Media id="Logo" content="HogTrans.png" />
+
+     <w:Div id="About">
+     </w:Div>
+    </w:Html>
+
+   </w:TabbedView>
+  </w:Html>
+ </w:HtmlWindow>
+</w:wwml>

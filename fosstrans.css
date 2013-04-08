@@ -2,6 +2,15 @@ body {
  text-align: center;
 }
 
+.toplinks {
+ font-size: 10pt;
+ margin-bottom: 10pt;
+}
+
+.copyright {
+ font-size: 10pt;
+}
+
 img {
  border: none;
 }

@@ -1,0 +1,1 @@
+HogTrans provides an automatic word translation engine built on statistics of text translations used for free software. These text translations are also displayed when you click on "examples" for any word.
